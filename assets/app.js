@@ -68,6 +68,14 @@
       });
     }, { threshold: 0.4 });
     Array.prototype.forEach.call(counters, function (c) { io.observe(c); });
+    /* 兜底：动画未触发时也保证终值可见 */
+    setTimeout(function () {
+      Array.prototype.forEach.call(counters, function (c) {
+        var t = parseFloat(c.getAttribute("data-count"));
+        var s = c.getAttribute("data-suffix") || "";
+        if (c.textContent === "0" || c.textContent === "0" + s) c.textContent = t + s;
+      });
+    }, 2000);
   } else {
     Array.prototype.forEach.call(counters, animate);
   }

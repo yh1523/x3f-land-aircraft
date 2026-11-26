@@ -231,6 +231,10 @@ table.risk td{font-size:13.8px}
 }
 @media (max-width:620px){
   .wrap{padding:0 18px}
+  body{overflow-x:hidden}
+  .hero-figure{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .hero-figure svg{min-width:680px}
+  .hero-figure .figcap::after{content:" · 图形可左右滑动查看"}
   .bar{padding:0 18px;height:66px;gap:10px}
   .nav{top:66px}
   .metric-strip{grid-template-columns:repeat(2,1fr)}
