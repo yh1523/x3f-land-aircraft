@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陆地航母 X3-F｜分体式飞行汽车全栈解构</title>
+<meta name="description" content="小鹏汇天陆地航母 X3-F 分体式飞行汽车：构型选择、六旋翼双涵道、800V 电驱、双认证电池、分合机构、功率与能量一阶核算、场景矩阵、单位经济与适航风险分析。">
+<meta name="keywords" content="小鹏汇天,陆地航母,X3-F,分体式飞行汽车,eVTOL,低空经济,飞行汽车,适航,TC,能量密度,单位经济">
+<meta name="author" content="飞行汽车技术基础 · 课程作业">
+<meta name="theme-color" content="#070a0f">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="陆地航母 X3-F 研究">
+<meta property="og:title" content="陆地航母 X3-F｜分体式飞行汽车全栈解构">
+<meta property="og:description" content="用『把飞行器做小、把地面做重』的工程取舍，换城市周边可运营性；用 30 km 级航程，把产品锁进营地半径。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070a0f'/%3E%3Cpath d='M12 40h26l14-8-6-6H20z' fill='%23ff7a18'/%3E%3Ccircle cx='20' cy='46' r='5' fill='%23ff7a18'/%3E%3Ccircle cx='36' cy='46' r='5' fill='%23ff7a18'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="assets/app.js"></script>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<a class="skip" href="#abstract">跳到正文</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="bar">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="34" height="34"><path d="M4 26h17l11-6-4-5H9z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="11" cy="30" r="3" fill="currentColor"/><circle cx="21" cy="30" r="3" fill="currentColor"/><path d="M6 14h22" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 3"/></svg>
+      </span>
+      <span class="brand-text"><b>陆地航母 X3-F</b><small>DIVIDED-MODULE FLYING CAR</small></span>
+    </a>
+    <nav class="nav" aria-label="章节导航">
+      <a href="#abstract">摘要</a>
+      <a href="#product">构型</a>
+      <a href="#tech">技术</a>
+      <a href="#feasibility">可行性</a>
+      <a href="#scenario">场景</a>
+      <a href="#market">市场</a>
+      <a href="#risk">风险</a>
+      <a href="#verdict">结论</a>
+    </nav>
+    <div class="bar-actions">
+      <button class="ghost" id="btnPrint" type="button">打印 / 存 PDF</button>
+      <button class="burger" id="btnMenu" type="button" aria-expanded="false" aria-controls="siteHeader">目录</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">课程作业 · 飞行汽车技术基础 · 2026</p>
+    <h1>把飞机<span class="hl">装进</span>后备箱</h1>
+    <p class="sub">小鹏汇天「陆地航母」X3-F · 分体式飞行汽车的技术、场景与商业全栈解构</p>
+    <p class="lead">
+      这是一台用「工程减法」换「法规可落地」的产品：它主动放弃了 200 km 的城际野心，
+      把飞行体压到 30 km 半径、把地面做成 1000 km 续航的母舰，
+      用一套 5 分钟自动分合机构，把空域、适航、培训、停放四个死结同时解开。
+      本篇按作业要求，依次回答三个问题：<b>技术上能不能安全地飞</b>、<b>场景上有没有人真的用</b>、<b>商业上能不能回本</b>。
+    </p>
+    <div class="chips">
+      <span>分体式构型</span><span>六旋翼双涵道</span><span>800V 碳化硅</span><span>双认证动力电池</span><span>一键分合</span><span>飞行营地网络</span>
+    </div>
+
+    <div class="hero-figure" aria-label="陆地航母构型示意">
+      <svg viewBox="0 0 900 320" role="img">
+        <defs>
+          <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff7a18" stop-opacity=".9"/>
+            <stop offset="1" stop-color="#ff7a18" stop-opacity=".25"/>
+          </linearGradient>
+          <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4fd1ff" stop-opacity=".85"/>
+            <stop offset="1" stop-color="#4fd1ff" stop-opacity=".15"/>
+          </linearGradient>
+        </defs>
+        <g stroke="#243040" stroke-width="1">
+          <path d="M0 250h900M0 200h900M0 150h900M0 100h900"/>
+        </g>
+        <!-- 地面模块 -->
+        <g>
+          <path d="M120 232h430l40-30-30-34H160l-40 34z" fill="none" stroke="#8b98a9" stroke-width="2"/>
+          <path d="M180 168h330l28 34H152z" fill="url(#gB)" opacity=".18"/>
+          <circle cx="190" cy="240" r="16" fill="none" stroke="#8b98a9" stroke-width="2"/>
+          <circle cx="270" cy="240" r="16" fill="none" stroke="#8b98a9" stroke-width="2"/>
+          <circle cx="430" cy="240" r="16" fill="none" stroke="#8b98a9" stroke-width="2"/>
+          <circle cx="510" cy="240" r="16" fill="none" stroke="#8b98a9" stroke-width="2"/>
+          <text x="150" y="290" fill="#8b98a9" font-size="13">陆行体 · 6×6 / 800V 增程 / 陆行 &gt;1000 km</text>
+        </g>
+        <!-- 飞行体 -->
+        <g>
+          <ellipse cx="640" cy="120" rx="86" ry="34" fill="none" stroke="#ff7a18" stroke-width="2"/>
+          <path d="M600 120h80" stroke="#ff7a18" stroke-width="1"/>
+          <g class="rotors" stroke="url(#gA)" stroke-width="2">
+            <circle cx="560" cy="84" r="26" fill="none"/>
+            <circle cx="684" cy="84" r="26" fill="none"/>
+            <circle cx="560" cy="156" r="26" fill="none"/>
+            <circle cx="684" cy="156" r="26" fill="none"/>
+            <circle cx="620" cy="52" r="20" fill="none"/>
+            <circle cx="660" cy="52" r="20" fill="none"/>
+          </g>
+          <text x="556" y="210" fill="#ff7a18" font-size="13">飞行体 X3-F · 双座 / 六旋翼双涵道 / 30 km</text>
+        </g>
+        <!-- 分合箭头 -->
+        <g stroke="#ff7a18" stroke-width="1.6" fill="none">
+          <path d="M470 210c40-8 70-24 92-42" stroke-dasharray="6 6"/>
+          <path d="M552 164l10 4-4 10" />
+        </g>
+        <text x="430" y="120" fill="#8b98a9" font-size="12">一键分合 ≈ 5 min</text>
+        <text x="430" y="138" fill="#5c6a7c" font-size="11">8 大控制模块 / 14 个作动机构</text>
+      </svg>
+      <p class="figcap">图 1｜分体式构型与分合关系示意（依据公开资料绘制，非工程图纸）</p>
+    </div>
+  </div>
+
+  <div class="metric-strip">
+    <div class="metric"><b data-count="200" data-suffix=" 万元">0</b><span>售价上限</span></div>
+    <div class="metric"><b data-count="30" data-suffix=" km">0</b><span>飞行体实用航程</span></div>
+    <div class="metric"><b data-count="2" data-suffix=" 座">0</b><span>载员</span></div>
+    <div class="metric"><b data-count="5" data-suffix=" min">0</b><span>一键分合</span></div>
+    <div class="metric"><b data-count="1000" data-suffix=" km+">0</b><span>陆行续航</span></div>
+    <div class="metric"><b data-count="3000" data-suffix=" 台+">0</b><span>意向采购订单</span></div>
+  </div>
+</section>
+
+<!-- ============ 1 摘要 ============ -->
+<section id="abstract" class="sec">
+  <div class="wrap">
+    <p class="sec-no">01 / EXECUTIVE SUMMARY</p>
+    <h2>一句话结论与三个待验证命题</h2>
+    <p class="kicker">
+      分体式是当前中国低空经济里<b>工程与法规耦合度最高</b>的一条产品路线：它不追求把飞行汽车做成「一台上天入地的车」，
+      而是拆成「地面母舰 + 可收纳飞行器」，让两套系统各自去满足最严的那套标准。
+    </p>
+
+    <div class="grid-2">
+      <div class="card card-accent">
+        <h3>结论</h3>
+        <ul class="ticks">
+          <li><b>技术：</b>工程可实现，瓶颈不在结构或电驱，而在<b>电池系统比能量</b>与<b>分合机构可靠性</b>。</li>
+          <li><b>场景：</b>成立的是「营地半径内的观光与体验」，不是「城市通勤」；30 km 决定了产品是玩具化的交通工具。</li>
+          <li><b>市场：</b>高净值个人 + 文旅运营商足以支撑千台级年销量，但自购用户的<b>每公里成本并未优于直升机包机</b>。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>方法</h3>
+        <ol class="num">
+          <li>公开参数采集：官网、量产工厂通报、适航审定点、招股与融资披露。</li>
+          <li>一阶工程估算：动量理论悬停功率 → 任务能量 → 电池质量 → 有效载荷闭合。</li>
+          <li>需求-指标对照：把「飞得起来」翻译成可判定的达标 / 边界 / 不达标。</li>
+          <li>单位经济建模：折旧 + 维护 + 能源 + 场地 + 保险，折算到飞行小时与座公里。</li>
+          <li>适航路径对照：TC → PC → AC → OC 的卡点识别。</li>
+        </ol>
+        <p class="note">数据截止 2026 年 11 月。凡标注「估」者为本文一阶推算，用于判断数量级，不作为工程结论。</p>
+      </div>
+    </div>
+
+    <div class="quote">
+      「它的对手不是另一台飞行汽车，而是『开车两小时去郊区，再花 800 块坐一次直升机』这件事本身。」
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 产品定义 ============ -->
+<section id="product" class="sec alt">
+  <div class="wrap">
+    <p class="sec-no">02 / PRODUCT DEFINITION</p>
+    <h2>1 + 1 的构型选择：为什么把飞机拆下来</h2>
+    <p class="kicker">一体式飞行汽车（可上路 + 可飞行）在物理上要同时满足碰撞法规与航空适航，质量、成本、可靠性三线作战；分体式把这场战争拆成两场局部战争。</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <span class="tag">地面</span>
+        <h3>陆行体 · 母舰</h3>
+        <ul class="plain">
+          <li>6×6 全轮驱动，后舱即机库，承载并收纳飞行体</li>
+          <li>全域 800V 碳化硅增程平台，陆行续航 &gt; 1000 km</li>
+          <li>按乘用车法规设计与认证，普通驾照即可驾驶</li>
+          <li>承担充电、冷却、通信中继与运输四项地面职能</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag cyan">空中</span>
+        <h3>飞行体 X3-F</h3>
+        <ul class="plain">
+          <li>双人座舱 eVTOL，六旋翼 + 双涵道布局</li>
+          <li>机臂与桨叶可折叠，折叠后整体进舱</li>
+          <li>单杆操纵、六自由度集成控制，降低上手门槛</li>
+          <li>实用航程约 30 km，速度约 100–130 km/h 量级</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">接口</span>
+        <h3>分合机构</h3>
+        <ul class="plain">
+          <li>一键自动对位、锁定、上电，全程约 5 分钟</li>
+          <li>8 大控制模块、14 个作动机构协同</li>
+          <li>机械锁 + 电气快接 + 冷却回路 + 数据握手四路耦合</li>
+          <li>是整个产品<b>最独特、也最难做可靠</b>的子系统</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="h3">构型取舍的代价表</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>方案</th><th>法规负担</th><th>质量效率</th><th>使用自由度</th><th>典型产品</th></tr></thead>
+        <tbody>
+          <tr><td>分体式</td><td><span class="ok">低</span>：陆空分别取证</td><td><span class="mid">中</span>：多一套机构死重</td><td><span class="mid">中</span>：必须先到起降点</td><td>陆地航母 X3-F</td></tr>
+          <tr><td>一体式（可上路）</td><td><span class="bad">高</span>：碰撞 + 适航双满足</td><td><span class="bad">低</span>：折叠机翼、冗余双重代价</td><td><span class="ok">高</span>：门到门</td><td>Alef Model A（概念阶段）</td></tr>
+          <tr><td>纯 eVTOL（不可上路）</td><td><span class="ok">低</span>：仅航空</td><td><span class="ok">高</span>：无地面机构</td><td><span class="bad">低</span>：依赖起降场与调度</td><td>AE200-100、EH216-S</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      判断：分体式的真正创新不在飞行器本身，而在<b>把「地面机动性」从飞行器上剥离</b>。
+      这让飞行体可以只做一件事——在 30 km 半径内安全地垂直起降；也让母舰可以只做一件事——把人送到能起飞的地方。
+      代价是：产品从「交通工具」退化为「目的地体验设备」。
+    </p>
+  </div>
+</section>
+
+<!-- ============ 3 关键技术 ============ -->
+<section id="tech" class="sec">
+  <div class="wrap">
+    <p class="sec-no">03 / KEY TECHNOLOGIES</p>
+    <h2>六项关键技术：哪一项真正卡脖子</h2>
+    <p class="kicker">按「难度 × 不可替代性」排序，而非按宣传口径排序。</p>
+
+    <div class="tech-grid">
+      <article class="tech">
+        <div class="tech-h"><span class="idx">01</span><h3>六旋翼双涵道气动布局</h3><span class="lvl lvl-2">难度 ★★★☆</span></div>
+        <p>涵道在低速段提供额外推力增益、桨叶包容与降噪，代价是结构死重与巡航阻力。六旋翼给出容错余度：单套动力单元失效后，剩余单元可通过推力重构维持可控下降。</p>
+        <p class="mini">工程含义：多旋翼没有直升机自转下滑的能力，安全裕度必须<b>前置</b>到冗余设计与低空迫降策略里。</p>
+      </article>
+
+      <article class="tech">
+        <div class="tech-h"><span class="idx">02</span><h3>800V 碳化硅电驱</h3><span class="lvl lvl-2">难度 ★★★</span></div>
+        <p>同为 800V 平台，电流减半意味着线束与连接器显著减重、发热下降、充电倍率提升。与汽车平台共用功率器件与供应链，是「用造车逻辑造飞机」最直接的降本路径。</p>
+        <p class="mini">风险点：航空件的温度循环、振动谱与汽车不同，车规器件的<b>适航符合性</b>需要单独建立证据链。</p>
+      </article>
+
+      <article class="tech">
+        <div class="tech-h"><span class="idx">03</span><h3>双认证动力电池</h3><span class="lvl lvl-4">难度 ★★★★★</span></div>
+        <p>同一套电池包要同时满足汽车法规与航空适航：前者考热失控蔓延与碰撞安全，后者考倍率、循环寿命、低温性能与失效概率。这是全车<b>唯一无法靠集成创新绕过</b>的硬指标。</p>
+        <p class="mini">本文判断：这一项是产品能否按期交付的<b>单点瓶颈</b>，其余子系统出问题都还有工程回旋余地。</p>
+      </article>
+
+      <article class="tech">
+        <div class="tech-h"><span class="idx">04</span><h3>折叠与自动分合</h3><span class="lvl lvl-4">难度 ★★★★★</span></div>
+        <p>14 个作动机构要在户外粉尘、温差、振动条件下完成毫米级对位与四路耦合。任何一个环节卡滞，用户就在营地现场失去飞行能力。</p>
+        <p class="mini">可靠性算法：若单机构 5 年可靠度 0.999，14 个串联后仅 0.986——需要并联冗余与降级运行模式来兜底。</p>
+      </article>
+
+      <article class="tech">
+        <div class="tech-h"><span class="idx">05</span><h3>单杆六自由度飞控</h3><span class="lvl lvl-3">难度 ★★★★</span></div>
+        <p>把传统直升机的总距、周期变距、脚舵三套输入压缩成一根杆，本质是把操纵权限交给飞控包线保护。用户买到的是「不会飞出包线」的确定性。</p>
+        <p class="mini">路线分叉：亿航选无人驾驶（取消飞行员），汇天选「简化有人驾驶」（保留人的决策）。前者法规更难，后者培训与责任更重。</p>
+      </article>
+
+      <article class="tech">
+        <div class="tech-h"><span class="idx">06</span><h3>轻量化结构与折叠机身</h3><span class="lvl lvl-3">难度 ★★★☆</span></div>
+        <p>碳纤维复合材料机身与一体化成型，把整备质量压到数百公斤级，为电池与乘员腾出质量预算。折叠处的接头是疲劳与损伤容限的重点区域。</p>
+        <p class="mini">这也是分体式的隐性成本：可折叠结构比固定结构重 8%–15%，直接吃掉航程。</p>
+      </article>
+    </div>
+
+    <div class="callout">
+      <b>排序结论：</b>电池（03）与分合机构（04）是真正的卡脖子项；气动与电驱属于「工程量大但路径清晰」；飞控的难点在验证与责任划分，不在算法本身。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 技术可行性 ============ -->
+<section id="feasibility" class="sec alt">
+  <div class="wrap">
+    <p class="sec-no">04 / TECHNICAL FEASIBILITY</p>
+    <h2>把「能飞」算成数字：功率、能量与质量的闭环</h2>
+    <p class="kicker">用动量理论做一阶估算，检验 30 km 这个数字到底是设计选择，还是物理约束。</p>
+
+    <div class="calc-box">
+      <div class="formula">
+        <p class="f-label">悬停诱导功率（理想）</p>
+        <p class="f-eq">P<sub>ideal</sub> = (mg)<sup>3/2</sup> / √(2ρA)</p>
+        <p class="f-label">计入品质因数与系统效率</p>
+        <p class="f-eq">P<sub>elec</sub> = P<sub>ideal</sub> / (FM · η<sub>drive</sub>)</p>
+      </div>
+      <div class="calc-params">
+        <p><span>起飞质量 m</span><b>880 kg</b></p>
+        <p><span>旋翼总盘面积 A</span><b>≈ 6.8 m²</b><span class="dim">（6 × 涵道，单盘直径约 1.2 m，估）</span></p>
+        <p><span>品质因数 FM</span><b>0.65</b></p>
+        <p><span>电驱效率 η</span><b>0.92</b></p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>环节</th><th>一阶结果</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>悬停电功率</td><td class="big">≈ 320 kW</td><td>理想值约 197 kW，除以 0.6 的总效率后量级抬升；与同级双座 eVTOL 公开量级一致</td></tr>
+          <tr><td>巡航功率（100 km/h）</td><td class="big">≈ 180 kW</td><td>多旋翼前飞时盘面效率下降，取悬停的 0.55–0.65 倍</td></tr>
+          <tr><td>30 km 任务能量</td><td class="big">≈ 54 kWh</td><td>18 min 巡航 + 起降段，另加 20% 备份电量</td></tr>
+          <tr><td>电池组质量（250 Wh/kg 系统级）</td><td class="big">≈ 216 kg</td><td>占最大起飞质量约 25%</td></tr>
+          <tr><td>质量闭合</td><td class="big">360 + 216 + 160 + 裕度</td><td>整备 360 kg + 电池 + 双人 160 kg，落在 880 kg 内，<b>自洽</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2 gap">
+      <div class="card">
+        <h3>为什么不是 200 km</h3>
+        <p>航程与电池质量分数近似线性，而电池质量又反过来抬高悬停功率——这是一个正反馈。把 30 km 提到 200 km，任务能量要翻约 6 倍，电池质量将超过全机一半，双座布局直接失效。</p>
+        <p>要跳出这个循环只有两条路：<b>换构型</b>（倾转旋翼/复合翼，用机翼产生升力，见同系列 AE200 分析），或<b>等电池</b>（系统级 400 Wh/kg 以上）。前者已有人做，后者 2026 年仍在爬坡。</p>
+      </div>
+      <div class="card">
+        <h3>冗余与失效逻辑</h3>
+        <ul class="plain">
+          <li><b>动力冗余：</b>6 套独立电驱，单套失效可降级继续飞行与着陆。</li>
+          <li><b>能源冗余：</b>双电池包/双母线，避免单点断电。</li>
+          <li><b>结构冗余：</b>涵道提供桨叶包容，降低碎片风险。</li>
+          <li><b>缺失项：</b>多旋翼无自转能力，一旦全动力丧失只能依赖低空迫降；这决定了运行场景必须是<b>昼间、目视、低高度</b>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="h3">需求 — 指标对照</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>使用需求</th><th>产品指标</th><th>判定</th><th>依据</th></tr></thead>
+        <tbody>
+          <tr><td>城市周边短途观光（10–30 km）</td><td>30 km / 双座</td><td><span class="ok">达标</span></td><td>单程 18 min，留 20% 备份</td></tr>
+          <tr><td>营地间摆渡（20–40 km）</td><td>30 km</td><td><span class="mid">边界</span></td><td>需中途补能或缩短航段</td></tr>
+          <tr><td>城市通勤（15–30 km 单程）</td><td>30 km + 起降点</td><td><span class="mid">边界</span></td><td>能量够，但起降点密度不足</td></tr>
+          <tr><td>城际出行（100 km+）</td><td>30 km</td><td><span class="bad">不达标</span></td><td>物理约束，非迭代可解</td></tr>
+          <tr><td>全天候运行</td><td>公开资料未披露结冰/夜航能力</td><td><span class="bad">未知</span></td><td>初期按昼间目视运行设计</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">技术可行性结论：<b>中等偏上</b>。作为「营地半径内的双人飞行器」，它的指标与构型是自洽的；作为「飞行汽车」这个品类名，它并未兑现城际机动性。</p>
+  </div>
+</section>
+
+<!-- ============ 5 场景 ============ -->
+<section id="scenario" class="sec">
+  <div class="wrap">
+    <p class="sec-no">05 / USE CASES</p>
+    <h2>场景矩阵：谁在为 30 分钟买单</h2>
+    <p class="kicker">飞行汽车的场景不是「更快地到达」，而是「到达一个原本到不了的地方，或以一种值得纪念的方式到达」。</p>
+
+    <div class="table-wrap">
+      <table class="wide">
+        <thead><tr><th>场景</th><th>典型航段</th><th>频次</th><th>付费意愿</th><th>关键依赖</th><th>适配度</th></tr></thead>
+        <tbody>
+          <tr><td>低空观光 / 体验飞行</td><td>10–30 km 环线</td><td>高</td><td>高（客单价 800–2000 元）</td><td>营地 + 空域报备</td><td><span class="stars">★★★★★</span></td></tr>
+          <tr><td>营地—营地 摆渡</td><td>20–40 km</td><td>中</td><td>中高</td><td>营地网络密度</td><td><span class="stars">★★★★</span></td></tr>
+          <tr><td>景区 / 海岛 / 山地接驳</td><td>10–50 km</td><td>中</td><td>高</td><td>地形与降落点</td><td><span class="stars">★★★★</span></td></tr>
+          <tr><td>应急救援 / 医疗转运</td><td>10–50 km</td><td>低频高值</td><td>高</td><td>夜航与仪表资质</td><td><span class="stars">★★★</span></td></tr>
+          <tr><td>日常通勤</td><td>15–30 km</td><td>高频</td><td>中</td><td>起降点 + 空域 + 停放</td><td><span class="stars">★★</span></td></tr>
+          <tr><td>城际商务</td><td>100–300 km</td><td>—</td><td>—</td><td>航程不足</td><td><span class="stars dim">★</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="h3">从「卖飞机」到「卖场景」：三步走的产品与场景时间轴</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="tl-dot"></span>
+        <p class="tl-time">2026 · 交付元年</p>
+        <h4>量产交付 + 首批营地</h4>
+        <p>广州黄埔工厂批量试产下线，飞行体适航审定冲刺；首批飞行营地在城市周边开放，形成「买车 + 用营地」的闭环。</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-dot"></span>
+        <p class="tl-time">2027 · 网络化</p>
+        <h4>营地网络与培训体系</h4>
+        <p>营地沿经典自驾线路铺开，飞行培训、保险、维修形成标准包；场景从「体验」向「周末出行」过渡。</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-dot"></span>
+        <p class="tl-time">2028–2029 · 扩容</p>
+        <h4>运营化与 B 端渗透</h4>
+        <p>文旅集团、通航运营商批量采购，单机年利用率提升；应急、巡检等公共服务场景打开。</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-dot"></span>
+        <p class="tl-time">2030+ · 二代构型</p>
+        <h4>全倾转混电平台</h4>
+        <p>高速长航程全倾转 eVTOL 接棒，把 30 km 的天花板抬到数百公里；分体式则退守体验与文旅市场。</p>
+      </div>
+    </div>
+    <p class="note">场景逻辑的关键判断：产品卖的不是航程，而是<b>「起飞许可 + 降落场地 + 维护保障」的打包服务</b>。营地是产品的一部分，不是配套。</p>
+  </div>
+</section>
+
+<!-- ============ 6 市场 ============ -->
+<section id="market" class="sec alt">
+  <div class="wrap">
+    <p class="sec-no">06 / MARKET FEASIBILITY</p>
+    <h2>单位经济：200 万的飞机，每公里多少钱</h2>
+    <p class="kicker">不谈票价谈成本都是耍流氓。下面把购机、维护、能源、场地、保险折到「飞行小时」与「单人公里」。</p>
+
+    <div class="calc-panel">
+      <div class="calc-inputs">
+        <h3>拥有成本计算器</h3>
+        <label>购机价（万元）<input id="inPrice" type="number" value="200" min="50" max="500" step="10"></label>
+        <label>年飞行小时<input id="inHours" type="number" value="60" min="10" max="400" step="5"></label>
+        <label>折旧年限（年）<input id="inYears" type="number" value="5" min="3" max="10" step="1"></label>
+        <label>年维护率（占购机价 %）<input id="inMaint" type="number" value="8" min="2" max="20" step="1"></label>
+        <label>电价（元/kWh）<input id="inKwh" type="number" value="1.2" min="0.4" max="2.5" step="0.1"></label>
+        <label>单次任务耗电（kWh）<input id="inEnergy" type="number" value="54" min="20" max="120" step="2"></label>
+        <p class="calc-hint">默认值取本文一阶估算：30 km 任务约 18 min、耗电 54 kWh。</p>
+      </div>
+      <div class="calc-outputs">
+        <div class="out"><span>每飞行小时成本</span><b id="outHour">—</b></div>
+        <div class="out"><span>单次 30 km 任务</span><b id="outTrip">—</b></div>
+        <div class="out"><span>单人公里成本</span><b id="outKm">—</b></div>
+        <div class="out"><span>5 年总拥有成本</span><b id="outTotal">—</b></div>
+        <p class="calc-hint" id="outNote">含折旧、维护、保险（按购机价 1.5%/年）、能源与场地（2 万元/年）。</p>
+      </div>
+    </div>
+
+    <div class="grid-2 gap">
+      <div class="card">
+        <h3>读完这张表要知道的事</h3>
+        <ul class="ticks">
+          <li>自购用户的<b>单人公里成本落在几十元量级</b>，与直升机包机同一数量级，远高于高端专车。</li>
+          <li>成本结构里<b>折旧与维护占七成以上</b>，能源只占零头——所以「电价便宜」并不能救商业模式。</li>
+          <li>提高年飞行小时是唯一有效的降本杠杆；这又回到营地密度与空域开放度。</li>
+          <li>结论：<b>个人自购是体验消费</b>，运营方靠客单价（观光 800–2000 元/人）才能覆盖成本。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>市场分层（一阶）</h3>
+        <ul class="plain">
+          <li><b>TAM：</b>中国低空经济 2025 年约 1.5 万亿元（含无人机、通航、文旅），载人 eVTOL 仅占极小切片。</li>
+          <li><b>SAM：</b>已开放营地与空域的城市周边文旅市场，按可支付 200 万元购机的高净值人群 + 文旅运营商估算，年容量千台级。</li>
+          <li><b>SOM：</b>2026–2027 年实际交付受产能与适航节奏约束，落在千台以内。</li>
+          <li><b>订单质量：</b>意向采购 &gt; 3000 台、可退预订上千台，与最终交付之间通常存在明显折损。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="h3">横向对比：四条路线的产品定位</h3>
+    <div class="table-wrap">
+      <table class="wide">
+        <thead><tr><th>产品</th><th>构型</th><th>座级</th><th>航程</th><th>速度</th><th>价格</th><th>适航状态</th><th>商业逻辑</th></tr></thead>
+        <tbody>
+          <tr><td><b>陆地航母 X3-F</b></td><td>分体式 · 六旋翼双涵道</td><td>2</td><td>≈30 km</td><td>≈100–130 km/h</td><td>≤200 万元</td><td>飞行体 TC 冲刺</td><td>个人消费 + 营地</td></tr>
+          <tr><td>沃飞长空 AE200-100</td><td>倾转旋翼 · 八轴内四倾转</td><td>6</td><td>200 km</td><td>≈230 km/h</td><td>未公开（估千万元级）</td><td>TC 第四阶段</td><td>运营卖运力</td></tr>
+          <tr><td>亿航 EH216-S</td><td>多旋翼 · 无人驾驶</td><td>2</td><td>≈30 km</td><td>≈130 km/h</td><td>239 万元</td><td>TC/PC/AC/OC 齐全</td><td>文旅运营</td></tr>
+          <tr><td>Alef Model A</td><td>一体式 · 可上路</td><td>2</td><td>≈170 km（宣称）</td><td>—</td><td>≈30 万美元</td><td>未取证</td><td>概念预售</td></tr>
+          <tr><td>Joby S4</td><td>倾转旋翼</td><td>4+1</td><td>≈160 km</td><td>≈320 km/h</td><td>未公开</td><td>FAA 审定中</td><td>UAM 运营商</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">市场可行性结论：<b>「高端个人 + 文旅运营」站得住，「大众通勤」站不住</b>。真正的天花板不是价格，而是营地与空域的供给速度。</p>
+  </div>
+</section>
+
+<!-- ============ 7 风险 ============ -->
+<section id="risk" class="sec">
+  <div class="wrap">
+    <p class="sec-no">07 / RISKS &amp; COMPLIANCE</p>
+    <h2>适航路径与风险矩阵</h2>
+    <p class="kicker">分体式没有现成的适航类别，飞行体必须走「专用条件」路线；这既是壁垒，也是时间风险。</p>
+
+    <div class="path">
+      <div class="path-step"><b>TC</b><span>型号合格证</span><small>设计符合性 · 当前冲刺</small></div>
+      <div class="path-arrow">→</div>
+      <div class="path-step"><b>PC</b><span>生产许可证</span><small>量产一致性</small></div>
+      <div class="path-arrow">→</div>
+      <div class="path-step"><b>AC</b><span>单机适航证</span><small>每架交付</small></div>
+      <div class="path-arrow">→</div>
+      <div class="path-step"><b>OC</b><span>运行合格证</span><small>商业载人</small></div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="risk">
+        <thead><tr><th>风险</th><th>概率</th><th>影响</th><th>传导路径</th><th>缓释</th></tr></thead>
+        <tbody>
+          <tr><td>飞行体 TC 延期</td><td><span class="pill p-h">高</span></td><td><span class="pill p-h">高</span></td><td>交付推迟 → 预订流失 → 现金流承压</td><td>分批取证、先文旅运营后个人交付</td></tr>
+          <tr><td>双认证电池产能/一致性</td><td><span class="pill p-m">中</span></td><td><span class="pill p-h">高</span></td><td>单点供应 → 整车下线受限</td><td>双供应商、电池自研 + 联合开发</td></tr>
+          <tr><td>分合机构现场失效</td><td><span class="pill p-m">中</span></td><td><span class="pill p-m">中</span></td><td>用户体验崩塌 → 口碑与退订</td><td>冗余作动、自检与远程诊断、营地驻场</td></tr>
+          <tr><td>营地与空域供给不足</td><td><span class="pill p-h">高</span></td><td><span class="pill p-h">高</span></td><td>买了飞不了 → 复购与转介绍归零</td><td>自建 + 加盟营地，与地方文旅绑定</td></tr>
+          <tr><td>事故舆情</td><td><span class="pill p-l">低</span></td><td><span class="pill p-h">高</span></td><td>监管收紧 → 行业性停飞</td><td>昼间目视运行、严格包线、保险与应急演练</td></tr>
+          <tr><td>二代构型替代</td><td><span class="pill p-m">中</span></td><td><span class="pill p-m">中</span></td><td>一代产品残值下降</td><td>以营地服务收入对冲硬件残值</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">合规结论：真正的门槛不是「造出来」，而是<b>「造出来还能合法地持续飞」</b>——TC/PC/AC/OC 四证加营地空域，构成一条比供应链更长的护城河。</p>
+  </div>
+</section>
+
+<!-- ============ 8 结论 ============ -->
+<section id="verdict" class="sec alt">
+  <div class="wrap">
+    <p class="sec-no">08 / VERDICT</p>
+    <h2>结论：一个诚实的 30 公里</h2>
+
+    <div class="score-grid">
+      <div class="score"><span>技术可行性</span><b>4.0</b><div class="bar-bg"><i style="width:80%"></i></div><small>工程自洽，电池为瓶颈</small></div>
+      <div class="score"><span>场景贴合度</span><b>3.5</b><div class="bar-bg"><i style="width:70%"></i></div><small>文旅强，通勤弱</small></div>
+      <div class="score"><span>市场可行性</span><b>3.0</b><div class="bar-bg"><i style="width:60%"></i></div><small>小众高端可成立</small></div>
+      <div class="score"><span>合规成熟度</span><b>2.5</b><div class="bar-bg"><i style="width:50%"></i></div><small>TC 冲刺，四证未齐</small></div>
+      <div class="score"><span>工程成熟度</span><b>3.5</b><div class="bar-bg"><i style="width:70%"></i></div><small>已批量试产</small></div>
+    </div>
+
+    <div class="grid-2 gap">
+      <div class="card card-accent">
+        <h3>如果我是产品负责人</h3>
+        <ol class="num">
+          <li><b>把营地当产品做：</b>营地密度决定复购，优先级高于航程升级。</li>
+          <li><b>把电池当战略物资：</b>双认证电池是唯一无法用集成能力弥补的短板。</li>
+          <li><b>把 30 km 讲清楚：</b>越早承认它是「目的地设备」，越不容易被舆情反噬。</li>
+          <li><b>提前铺二代：</b>全倾转混电平台才是规模化的答案，分体式是入场券。</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>如果再给我三个数据</h3>
+        <ul class="plain">
+          <li>飞行体实际电池包能量与系统级比能量（决定所有性能推算的精度）。</li>
+          <li>分合机构的 MTBF 与现场故障率（决定用户体验与售后成本）。</li>
+          <li>单机年飞行小时的真实分布（决定单位经济是否成立）。</li>
+        </ul>
+        <p class="note">这三项公开资料均未披露，也是本报告最需要后续验证的部分。</p>
+      </div>
+    </div>
+
+    <div class="final">
+      <p>分体式飞行汽车不是「会飞的汽车」，而是<b>「会飞的周末」</b>。它把航空的门槛翻译成一套可购买的服务：一处营地、一次培训、一段 18 分钟的航程。理解这一点，才能理解它为什么只做 30 公里——不是做不到，而是这个距离刚好是体验与法规的交集。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 参考 ============ -->
+<section id="refs" class="sec refs">
+  <div class="wrap">
+    <p class="sec-no">09 / REFERENCES</p>
+    <h2>参考资料</h2>
+    <ol class="reflist">
+      <li>小鹏汇天官网新闻：《“陆地航母”飞行汽车海外首秀，计划 2026 年量产交付》。<a href="https://www.xiaopeng.com/news/company_news/5438.html" target="_blank" rel="noopener">xiaopeng.com</a></li>
+      <li>小鹏汇天官网：《何小鹏出席中国电动汽车百人会论坛：2026 年开启低空经济新纪元》（飞行体进入适航审定阶段）。<a href="https://www.xiaopeng.com/news/company_news/5457.html" target="_blank" rel="noopener">xiaopeng.com</a></li>
+      <li>广州市人民政府：《“广州智造”飞行汽车在黄埔批量试产下线》，2026-03-05。<a href="https://www.gz.gov.cn/ysgz/xwdt/ysdt/content/post_10712876.html" target="_blank" rel="noopener">gz.gov.cn</a></li>
+      <li>财联社：《飞行汽车来了！买车“送飞机” 小鹏汇天“陆地航母”2026 年交付、单价不超 200 万》。<a href="https://www.cls.cn/detail/1787713" target="_blank" rel="noopener">cls.cn</a></li>
+      <li>圆象低空产业观察：《小鹏汇天“陆地航母”启动多机编队试飞：12 万平米工厂每 30 分钟下线一台》。<a href="https://yuanxiangsky.com/N/1839.html" target="_blank" rel="noopener">yuanxiangsky.com</a></li>
+      <li>汇天官网新闻（飞行营地、电推进单元下线、全倾转混电平台发布）。<a href="https://cn.aridge.com/" target="_blank" rel="noopener">cn.aridge.com</a></li>
+      <li>亿航智能：《EH216-S 中国市场官方指导价 239 万元》。<a href="https://www.ehang.com/cn/news/1044.html" target="_blank" rel="noopener">ehang.com</a></li>
+      <li>中国航空产业大会（2025）：我国低空经济市场规模 2025 年约 1.5 万亿元、2030 年有望突破 2 万亿元。<a href="https://stcn.com/article/detail/3507205.html" target="_blank" rel="noopener">stcn.com</a></li>
+      <li>BCG《中国载人 eVTOL 行业白皮书》（2025-09）：构型速度区间与出行成本对比。<a href="https://web-assets.bcg.com/b0/36/66430fcb44768194f26f5fbf275d/bcg-whitepaper-on-chinas-manned-evtol-market-cn-sept-2025.pdf" target="_blank" rel="noopener">bcg.com</a></li>
+      <li>欣旺达动力专访：eVTOL 电池能量密度 320/360/400 Wh/kg 路线。<a href="https://m.21jingji.com/article/20250430/herald/cc246ca9df5b96917e65c1cd68346d97_zaker.html" target="_blank" rel="noopener">21jingji.com</a></li>
+    </ol>
+    <p class="note">本文为一阶研究性分析，非官方资料；参数以厂商公开口径为准，推算部分已标注「估」。</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot">
+    <div>
+      <b>陆地航母 X3-F｜分体式飞行汽车全栈解构</b>
+      <p>飞行汽车技术基础 · 课程作业 · 数据截止 2026-11</p>
+    </div>
+    <div class="foot-links">
+      <a href="#top">回到顶部</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
